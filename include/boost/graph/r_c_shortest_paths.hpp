@@ -158,15 +158,15 @@ namespace detail
 #if defined(BOOST_NO_CXX11_ALLOCATOR)
         typedef typename Label_Allocator::template rebind<
             r_c_shortest_paths_label< Graph, ResourceContainer > >::other
-            LAlloc;
+            l_alloc;
 #else
         typedef typename std::allocator_traits< LabelAllocator >::
             template rebind_alloc<
                 r_c_shortest_paths_label< Graph, ResourceContainer > >
-                LAlloc;
+                l_alloc;
 #endif
 
-        LAlloc l_alloc;
+        l_alloc label_allocator;
 
         typedef std::shared_ptr<
             r_c_shortest_paths_label< Graph, ResourceContainer > >
@@ -178,7 +178,7 @@ namespace detail
 
         bool b_feasible = true;
         sp_label splabel_first_label = std::allocate_shared<
-            r_c_shortest_paths_label< Graph, ResourceContainer > >(l_alloc,
+            r_c_shortest_paths_label< Graph, ResourceContainer > >(label_allocator,
             i_label_num++, rc,
             std::shared_ptr<
                 r_c_shortest_paths_label< Graph, ResourceContainer > >(),
@@ -371,7 +371,7 @@ namespace detail
                     b_feasible = true;
                     sp_label new_label = std::allocate_shared<
                         r_c_shortest_paths_label< Graph, ResourceContainer > >(
-                        l_alloc, i_label_num++,
+                        label_allocator, i_label_num++,
                         cur_label->cumulated_resource_consumption, cur_label,
                         *oei, target(*oei, g));
                     b_feasible = ref(g,
